@@ -1,6 +1,7 @@
 import React, {useEffect, useState, useRef} from 'react'
 import { Table } from './Table'
 import { CSVLink } from 'react-csv'
+import ScatterPlot from './ScatterPlot';
 
 const Dashboard = () => {
   const [songs, setSongs] = useState([])
@@ -11,7 +12,9 @@ const Dashboard = () => {
   const [songByTitle, setSongByTitle] = useState([])
   const [showByTitle, setShowByTitle] = useState(false)
   const [showTable, setShowTable] = useState(true)
+  const [showPlots, setShowPlots] = useState(false)
   const csvLinkRef = useRef(); 
+  const [plotData, setPlotData] = useState([])
 
   useEffect(function() {
       fetch(`/songs?page=${page}&per_page=10`).then(
@@ -29,6 +32,7 @@ const Dashboard = () => {
     fetch('/songs')
       .then((res) => res.json())
       .then((data) => {
+        setPlotData(data); 
       });
   }, []);
 
@@ -43,6 +47,7 @@ const Dashboard = () => {
     e.preventDefault();
     setShowByTitle(true)
     setShowTable(false)
+    setShowPlots(false)
     fetch(`/searchByTitle?title=${encodeURIComponent(title.current.value)}`).then(
       (res) => res.json()
     ).then(
@@ -69,6 +74,7 @@ const Dashboard = () => {
     e.preventDefault()
     setShowTable(true)
     setShowByTitle(false)
+    setShowPlots(false)
     setPage(1)
     title.current.value = ''
   }
@@ -78,6 +84,13 @@ const Dashboard = () => {
       .then((data) => {
         setAllSongs(data); 
       });
+  };
+
+  const handlePlot = (e) => {
+    e.preventDefault();
+    setShowPlots(true)
+    setShowByTitle(false)
+    setShowTable(false)
   };
 
   return (
@@ -99,8 +112,18 @@ const Dashboard = () => {
           <button className="p-2 bg-blue-300 ml-6" onClick={handleShowButtonClick}>
             Show all songs
           </button>
+          <button className="p-2 bg-blue-300 ml-6" onClick={handlePlot}>
+            Show Plot
+          </button>
         </form>
       </div>
+      {showPlots && allSongs && (
+        <div className='my-2'>
+          <h1 className='text-xl bold ml-16'> Danceability Scatter Plot</h1>
+          <ScatterPlot chartdata={plotData}/>
+        </div>
+
+      )}
 
       {showByTitle && songByTitle && (
         <div className="mx-24 mb-16 my-16">
