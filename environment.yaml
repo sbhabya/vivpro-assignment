@@ -1,4 +1,4 @@
-name: c:\Users\17654\Desktop\v_assgn\vivpro-assignment\venv
+name: vivpro_assgn
 channels:
   - defaults
 dependencies:
@@ -47,4 +47,3 @@ dependencies:
       - flask-sqlalchemy==3.1.1
       - greenlet==3.0.3
       - sqlalchemy==2.0.32
-prefix: c:\Users\17654\Desktop\v_assgn\vivpro-assignment\venv

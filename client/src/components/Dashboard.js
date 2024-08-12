@@ -16,6 +16,7 @@ const Dashboard = () => {
   const csvLinkRef = useRef(); 
   const [plotData, setPlotData] = useState([])
 
+
   useEffect(function() {
       fetch(`/songs?page=${page}&per_page=10`).then(
         (res) => res.json()
@@ -61,13 +62,29 @@ const Dashboard = () => {
     if (page < totalPages) {
       setPage(page + 1)
     }
+    fetch(`/songs?page=${page}&per_page=10`).then(
+      (res) => res.json()
+    ).then(
+      data => {
+        setSongs(data.items)
+        setTotalPages(data.pages)
+      }
+    )
   }
 
   const handlePreviousPage = (e) => {
     e.preventDefault();
     if (page > 1) {
       setPage(page - 1)
-    }  
+    } 
+    fetch(`/songs?page=${page}&per_page=10`).then(
+      (res) => res.json()
+    ).then(
+      data => {
+        setSongs(data.items)
+        setTotalPages(data.pages)
+      }
+    ) 
   }
 
   const handleShowButtonClick = (e) => {

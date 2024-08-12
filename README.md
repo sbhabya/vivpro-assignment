@@ -3,9 +3,10 @@
 ## Set-up instructions
 1. `git clone https://github.com/sbhabya/vivpro-assignment.git`
 1. Create python virtual environment and install the dependencies:
-    1. `conda create --name vivpro_assgn --file environment.yaml`
-    1. `conda activate vivpro_assgn`
+    1. `conda env create -f environment.yaml`
+    1. `conda activate vivpro_assgn` (on Linux and Mac) or `activate vivpro_assgn` (on Windows)
 1. Install dependencies for the React front-end:
+    1. If you don't already have Node.js installed, please do so from [here](https://nodejs.org/en/download/package-manager).
     1. `cd client`
     1. `npm install`
 
