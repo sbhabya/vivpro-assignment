@@ -123,4 +123,4 @@ api.add_resource(SongByTitle, '/searchByTitle')
    
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
