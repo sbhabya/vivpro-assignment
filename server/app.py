@@ -1,6 +1,7 @@
 from flask import Flask
-from flask_restful import Api, Resource, reqparse
+from flask_restful import Api, Resource, reqparse, fields, marshal, marshal_with
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 import os
 
 
@@ -32,21 +33,68 @@ class PlaylistModel(db.Model):
     time_signature = db.Column(db.Integer, nullable=True)
     num_bars = db.Column(db.Integer, nullable=True)
     num_sections = db.Column(db.Integer, nullable=True)
-    num_segments = db.Column(db.Integer, nullable=True)
+    num_segments = db.Column('class',db.Integer, nullable=True)
     class_ = db.Column(db.Integer, nullable=True)
+
+resource_fields = {
+    'index': fields.Integer,
+    'id': fields.String,
+    'title': fields.String,
+    'danceability': fields.Float,
+    'energy': fields.Float,
+    'key': fields.Integer,
+    'loudness': fields.Float,
+    'mode': fields.Integer,
+    'acousticness': fields.Float,
+    'instrumentalness': fields.Float,
+    'liveness': fields.Float,
+    'valence': fields.Float,
+    'tempo': fields.Float,
+    'duration_ms': fields.Integer,
+    'time_signature': fields.Integer,
+    'num_bars': fields.Integer,
+    'num_sections': fields.Integer,
+    'num_segments': fields.Integer,
+    'class_': fields.Integer,
+}
 
 class Songs(Resource):
     def get(self):
-        result = PlaylistModel.query.all()
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, location='args')
+        parser.add_argument('per_page', type=int, location='args')
+        args = parser.parse_args()
+
+        page = args['page']
+        per_page = args['per_page']
+        if not page and not per_page:
+            result = PlaylistModel.query.all()
+            result = marshal(result, resource_fields)
+            return result
+
+        paginated_result = PlaylistModel.query.paginate(page=page, per_page=per_page, error_out=False)
+
+        items = marshal(paginated_result.items, resource_fields)
+
+        result = {
+            'items': items,
+            'total': paginated_result.total,
+            'page': paginated_result.page,
+            'pages': paginated_result.pages,
+            'per_page': paginated_result.per_page
+        }
+
         return result
     
 class SongByTitle(Resource):    
+    @marshal_with(resource_fields)
     def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument('title', type=str, location='args')
         args = parser.parse_args()
         title = args['title']
-        result = PlaylistModel.query.filter_by(title=title).all()
+        result = PlaylistModel.query.filter(
+            func.lower(PlaylistModel.title).ilike(f'%{title.lower()}%')).all() 
         return result
 
 if __name__ == '__main__':
