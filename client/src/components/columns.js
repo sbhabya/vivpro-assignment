@@ -1,3 +1,5 @@
+import StarRating from "./StarRating"
+
 export const COLUMNS = [
     {
         Header: 'Index',
@@ -77,6 +79,7 @@ export const COLUMNS = [
     },
     {
         Header: 'Rating',
-        accessor: 'rating'
+        accessor: 'rating',
+        Cell: ({ value, row }) => <StarRating stars={value} songId={row.original.index}/>
     }
 ]
