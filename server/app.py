@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_restful import Api, Resource, reqparse, fields, marshal, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
@@ -33,8 +33,9 @@ class PlaylistModel(db.Model):
     time_signature = db.Column(db.Integer, nullable=True)
     num_bars = db.Column(db.Integer, nullable=True)
     num_sections = db.Column(db.Integer, nullable=True)
-    num_segments = db.Column('class',db.Integer, nullable=True)
-    class_ = db.Column(db.Integer, nullable=True)
+    num_segments = db.Column(db.Integer, nullable=True)
+    class_ = db.Column('class', db.Integer, nullable=True)
+    rating = db.Column(db.Integer, nullable=True)
 
 resource_fields = {
     'index': fields.Integer,
@@ -56,6 +57,7 @@ resource_fields = {
     'num_sections': fields.Integer,
     'num_segments': fields.Integer,
     'class_': fields.Integer,
+    'rating': fields.Integer
 }
 
 class Songs(Resource):
@@ -85,6 +87,16 @@ class Songs(Resource):
         }
 
         return result
+
+class Rating(Resource):
+    def patch(self, index):
+        song = PlaylistModel.query.get(index)
+        star_rating = request.json.get('rating')
+        app.logger.info(star_rating)
+        song.rating = star_rating
+        db.session.commit()
+        return {'message': 'Rating updated successfully'}, 200
+
     
 class SongByTitle(Resource):    
     @marshal_with(resource_fields)
@@ -96,6 +108,12 @@ class SongByTitle(Resource):
         result = PlaylistModel.query.filter(
             func.lower(PlaylistModel.title).ilike(f'%{title.lower()}%')).all() 
         return result
+
+
+api.add_resource(Songs, '/songs')
+api.add_resource(Rating, '/addRating/<int:index>')
+api.add_resource(SongByTitle, '/searchByTitle')
+   
 
 if __name__ == '__main__':
     app.run(debug=True)
