@@ -31,9 +31,13 @@
 ## Application snapshots
 
 ### Main screen (table of all songs)
+![Main screen](assets/sc1.png)
 
 ### Get song by title
+![Get song by title](assets/sc2.png)
 
 ### Ratings
+![Ratings](assets/sc3.png)
 
 ### Scatter plot
+![Scatter plot](assets/sc4.png)
