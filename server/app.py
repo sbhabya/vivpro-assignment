@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_restful import Api
+from flask_restful import Api, Resource, reqparse
 from flask_sqlalchemy import SQLAlchemy
 import os
 
@@ -34,6 +34,20 @@ class PlaylistModel(db.Model):
     num_sections = db.Column(db.Integer, nullable=True)
     num_segments = db.Column(db.Integer, nullable=True)
     class_ = db.Column(db.Integer, nullable=True)
+
+class Songs(Resource):
+    def get(self):
+        result = PlaylistModel.query.all()
+        return result
+    
+class SongByTitle(Resource):    
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('title', type=str, location='args')
+        args = parser.parse_args()
+        title = args['title']
+        result = PlaylistModel.query.filter_by(title=title).all()
+        return result
 
 if __name__ == '__main__':
     app.run(debug=True)
