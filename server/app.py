@@ -112,9 +112,8 @@ class SongByTitle(Resource):
         app.logger.info(title)
         result = PlaylistModel.query.filter(
             func.lower(PlaylistModel.title).ilike(f'%{title.lower()}%')).all() 
-        if not result:
+        if not result or len(result) == 0:
             abort(404, description='Song not found')
-
         return result
 
 
