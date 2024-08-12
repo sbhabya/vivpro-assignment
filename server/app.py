@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, abort
 from flask_restful import Api, Resource, reqparse, fields, marshal, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
@@ -91,6 +91,8 @@ class Songs(Resource):
 class Rating(Resource):
     def patch(self, index):
         song = PlaylistModel.query.get(index)
+        if not song:
+            abort(404, description='Song not found')
         star_rating = request.json.get('rating')
         app.logger.info(star_rating)
         song.rating = star_rating
@@ -105,8 +107,14 @@ class SongByTitle(Resource):
         parser.add_argument('title', type=str, location='args')
         args = parser.parse_args()
         title = args['title']
+        if not title:
+            abort(400, description='No title provided')
+        app.logger.info(title)
         result = PlaylistModel.query.filter(
             func.lower(PlaylistModel.title).ilike(f'%{title.lower()}%')).all() 
+        if not result:
+            abort(404, description='Song not found')
+
         return result
 
 
