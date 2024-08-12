@@ -1,14 +1,17 @@
 import React, {useEffect, useState, useRef} from 'react'
 import { Table } from './Table'
+import { CSVLink } from 'react-csv'
 
 const Dashboard = () => {
   const [songs, setSongs] = useState([])
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
+  const [allSongs, setAllSongs] = useState([])
   const title = useRef(null);
   const [songByTitle, setSongByTitle] = useState([])
   const [showByTitle, setShowByTitle] = useState(false)
   const [showTable, setShowTable] = useState(true)
+  const csvLinkRef = useRef(); 
 
   useEffect(function() {
       fetch(`/songs?page=${page}&per_page=10`).then(
@@ -21,6 +24,20 @@ const Dashboard = () => {
       )
     
   }, [page, showTable]);
+
+  useEffect(function() {
+    fetch('/songs')
+      .then((res) => res.json())
+      .then((data) => {
+      });
+  }, []);
+
+  useEffect(() => {
+    if (allSongs.length > 0) { 
+      csvLinkRef.current.link.click(); 
+    }
+  }, [allSongs]);
+
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -55,7 +72,14 @@ const Dashboard = () => {
     setPage(1)
     title.current.value = ''
   }
- 
+  const handleDownload = () => {
+    fetch('/songs')
+      .then((res) => res.json())
+      .then((data) => {
+        setAllSongs(data); 
+      });
+  };
+
   return (
     <>
       <div className="bg-blue-100 flex justify-center h-15">
@@ -77,6 +101,7 @@ const Dashboard = () => {
           </button>
         </form>
       </div>
+
       {showByTitle && songByTitle && (
         <div className="mx-24 mb-16 my-16">
           <Table songsData={songByTitle} />
@@ -103,6 +128,15 @@ const Dashboard = () => {
             >
               Next
             </button>
+            <button onClick={handleDownload} className="px-3 py-1 bg-blue-500 text-white rounded">
+              Export CSV
+            </button>
+            <CSVLink
+              data={allSongs}
+              filename="playlist.csv"
+              className="hidden" 
+              ref={csvLinkRef} 
+            />
           </div>
         </div>
       )}
