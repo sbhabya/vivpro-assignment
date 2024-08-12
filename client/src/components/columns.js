@@ -1,9 +1,11 @@
 import StarRating from "./StarRating"
+import { numericSort } from "../utils/sortFunction"
 
 export const COLUMNS = [
     {
         Header: 'Index',
-        accessor: 'index'
+        accessor: 'index',
+        sortType: numericSort
     },
     {
         Header: 'Id',
@@ -15,71 +17,88 @@ export const COLUMNS = [
     },
     {
         Header: 'Dancebility',
-        accessor: 'danceability'
+        accessor: 'danceability',
+        sortType: numericSort
     },
     {
         Header: 'Energy',
-        accessor: 'energy'
+        accessor: 'energy',
+        sortType: numericSort
     },
     {
         Header: 'Key',
-        accessor: 'key'
+        accessor: 'key',
+        sortType: numericSort
     },
     {
         Header: 'Loudness',
-        accessor: 'loudness'
+        accessor: 'loudness',
+        sortType: numericSort
     },
     {
         Header: 'Mode',
-        accessor: 'mode'
+        accessor: 'mode',
+        sortType: numericSort
     },
     {
         Header: 'Acousticness',
-        accessor: 'acousticness'
+        accessor: 'acousticness',
+        sortType: numericSort
     }, 
     {
         Header: 'Instrumentalness',
-        accessor: 'instrumentalness'
+        accessor: 'instrumentalness',
+        sortType: numericSort
     },
     {
         Header: 'Liveness',
-        accessor: 'liveness'
+        accessor: 'liveness',
+        sortType: numericSort
     },
     {
         Header: 'Valence',
-        accessor: 'valence'
+        accessor: 'valence',
+        sortType: numericSort
     },
     {
         Header: 'Tempo',
-        accessor: 'tempo'
+        accessor: 'tempo',
+        sortType: numericSort
     },
     {
         Header: 'Duration',
-        accessor: 'duration_ms'
+        accessor: 'duration_ms',
+        sortType: numericSort
     },
     {
         Header: 'Time Signature',
-        accessor: 'time_signature'
+        accessor: 'time_signature',
+        sortType: numericSort
     },
     {
         Header: 'Num Bars',
-        accessor: 'num_bars'
+        accessor: 'num_bars',
+        sortType: numericSort
     },
     {
         Header: 'Num Sections',
-        accessor: 'num_sections'
+        accessor: 'num_sections',
+        sortType: numericSort
     },
     {
         Header: 'Num Segments',
-        accessor: 'num_segments'
+        accessor: 'num_segments',
+        sortType: numericSort
     },
     {
         Header: 'class',
-        accessor: 'class_'
+        accessor: 'class_',
+        sortType: numericSort
     },
     {
         Header: 'Rating',
         accessor: 'rating',
-        Cell: ({ value, row }) => <StarRating stars={value} songId={row.original.index}/>
+        sortType: numericSort,
+        Cell: ({ value, row }) => <StarRating stars={value} songId={row.original.index}/>,
     }
 ]
