@@ -131,4 +131,5 @@ dist
 
 #custom
 venv/
+venv
 data_processing/vivpro.db
