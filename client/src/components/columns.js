@@ -1,7 +1,7 @@
 import StarRating from "./StarRating"
 import { numericSort } from "../utils/sortFunction"
 
-export const COLUMNS = [
+export const COLUMNS = (songsDataSetter) => [
     {
         Header: 'Index',
         accessor: 'index',
@@ -99,6 +99,8 @@ export const COLUMNS = [
         Header: 'Rating',
         accessor: 'rating',
         sortType: numericSort,
-        Cell: ({ value, row }) => <StarRating stars={value} songId={row.original.index}/>,
+        Cell: ({ value, row }) => <StarRating stars={value} songId={row.original.index} 
+        songsDataSetter={songsDataSetter}
+        songsData={row.original}/>,
     }
 ]

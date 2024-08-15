@@ -53,7 +53,7 @@ class FlaskTestCase(unittest.TestCase):
 
     @patch('app.PlaylistModel.query')
     def test_get_song_by_title_not_found(self, mock_query):
-        mock_query.filter_by.return_value.first.return_value = None
+        mock_query.filter.return_value.all.return_value = None
         response = self.client.get('/searchByTitle?title=InvalidSongTitle')
         self.assertEqual(response.status_code, 404)
 
@@ -62,10 +62,11 @@ class FlaskTestCase(unittest.TestCase):
     def test_update_rating(self, mock_query, mock_session):
         mock_song = MagicMock()
         mock_song.id = 1
+        mock_song.rating = 5
         mock_query.get.return_value = mock_song
-        response = self.client.patch('/addRating/1', json={'rating': 3})
+        response = self.client.patch('/addRating/1', json={'rating': 4})
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(mock_song.rating, 3)
+        self.assertEqual(mock_song.rating, 4)
         mock_session.commit.assert_called_once()
 
     @patch('app.PlaylistModel.query')

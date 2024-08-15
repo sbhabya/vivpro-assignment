@@ -2,9 +2,9 @@ import React, {useMemo} from 'react'
 import { useTable, useSortBy } from 'react-table'
 import { COLUMNS } from './columns'
 
-export const Table = ({ songsData }) => {
+export const Table = ({ songsData, songsDataSetter }) => {
 
-    const columns = useMemo(() => COLUMNS, []);
+    const columns = useMemo(() => COLUMNS(songsDataSetter), [songsDataSetter]);
     const data = useMemo(() => Array.isArray(songsData) ? songsData : [], [songsData]);
 
     const tableInstance = useTable({

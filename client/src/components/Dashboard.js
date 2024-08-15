@@ -62,14 +62,6 @@ const Dashboard = () => {
     if (page < totalPages) {
       setPage(page + 1)
     }
-    fetch(`/songs?page=${page}&per_page=10`).then(
-      (res) => res.json()
-    ).then(
-      data => {
-        setSongs(data.items)
-        setTotalPages(data.pages)
-      }
-    )
   }
 
   const handlePreviousPage = (e) => {
@@ -77,14 +69,6 @@ const Dashboard = () => {
     if (page > 1) {
       setPage(page - 1)
     } 
-    fetch(`/songs?page=${page}&per_page=10`).then(
-      (res) => res.json()
-    ).then(
-      data => {
-        setSongs(data.items)
-        setTotalPages(data.pages)
-      }
-    ) 
   }
 
   const handleShowButtonClick = (e) => {
@@ -144,12 +128,12 @@ const Dashboard = () => {
 
       {showByTitle && songByTitle && (
         <div className="mx-24 mb-16 my-16">
-          <Table songsData={songByTitle} />
+          <Table songsData={songByTitle} songsDataSetter={setSongByTitle}/>
         </div>
       )}
       {showTable && songs && (
         <div className="mx-24 mb-16 my-16">
-          <Table songsData={songs} />
+          <Table songsData={songs}  songsDataSetter={setSongs}/>
           <div className="flex justify-center items-center mt-1 p-1 bg-white border-t">
             <button
               onClick={handlePreviousPage}

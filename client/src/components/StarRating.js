@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 
-export default function StarRating({ stars, songId}) {
-
+export default function StarRating({ stars, songId, songsDataSetter, songsData}) {
   const [temp, setTemp] = useState(stars)
 
   useEffect(() => {
@@ -18,12 +17,10 @@ export default function StarRating({ stars, songId}) {
       },
       body: JSON.stringify({ rating }),
     })
-    .then(response => {
-      if (response.ok) {
-        console.log('Rating updated successfully');
-      } else {
-        console.error('Failed to update rating');
-      }
+    .then(data => {
+      songsDataSetter(prevData => prevData.map(song => 
+        song.index === songId ? { ...song, rating } : song
+      ));
     })
     .catch(error => {
       console.error('Error:', error);
